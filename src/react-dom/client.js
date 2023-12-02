@@ -17,7 +17,6 @@ function createRoot(container) {
 /**
  * 将虚拟DOM转换为真实DOM
  * @param {*} vdom 可能是一个对象 {type, props} 可能是一个字符串或数字 “xxx” 1（还有可能是数组？）
- * @returns 真实DOM
  */
 function renderElement(vdom) {
   //* 如果 vdom 是一个数字或者一整个字符串，则创建一个文本节点并返回
@@ -25,7 +24,28 @@ function renderElement(vdom) {
     return renderText(vdom);
 
   // 取出元素类型和属性对象
+  // type 可能的类型 1. 原生DOM标签 2.函数（类和函数）
   const { type, props } = vdom;
+
+  // 如果元素/虚拟DOM的类型是一个函数的话
+  if (typeof type === "function") {
+    // 类组件
+    if (type.isReactComponent) {
+      // 把属性对象传递给类组件的构造函数，返回类组件的实例
+      const instance = new type(props);
+      // 调用实例上的render方法，返回将要渲染的虚拟DOM
+      const classVdom = instance.render();
+      // 将虚拟DOM传递给renderElement返回真实DOM
+      return renderElement(classVdom);
+    } else {
+      // 处理函数组件
+      // 把属性对象传递给函数组件这个函数，返回一个React元素(vdom) => 函数的执行的结果是vdom
+      const functionVdom = type(props);
+      // 把函数组件返回的React元素传递给renderElement，创建真实DOM
+      return renderElement(functionVdom);
+    }
+  }
+
   // 根据type创建真实DOM
   const domElement = document.createElement(type);
   // 处理属性 ['style', 'className', 'children']

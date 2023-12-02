@@ -26,8 +26,19 @@ function createElement(type, config, children) {
   };
 }
 
+// 在 ES6 中，类其实是一个语法糖，本质上是一个函数
+class Component {
+  // 给类上添加静态属性，用来判断是类组件还是函数组件
+  static isReactComponent = true;
+  constructor(props) {
+    // 将收到属性保存到自己的实例上
+    this.props = props;
+  }
+}
+
 const React = {
   createElement,
+  Component,
 };
 
 export default React;
