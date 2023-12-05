@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="root">
+    <p>stopPropagation 只是用来阻止事件传播 当前元素如果添加了多个事件，<b>会在所有的事件执行结束后</b>，停止传播。</p>
+    <button id="btn">click</button>
+  </div>
+
+
+  <script>
+    const root = document.getElementById("root")
+    const btn = document.getElementById("btn")
+
+    root.addEventListener("click", (e) => {
+      console.log("root capture")
+      // e.stopPropagation()
+    }, true)
+
+    // 绑定多个事件，会依次执行
+    root.addEventListener("click", () => {
+      console.log("root capture2")
+    }, true)
+
+    btn.addEventListener("click", () => {
+      console.log("btn capture")
+    }, true)
+
+    root.addEventListener("click", (e) => {
+      console.log("root bubble")
+      e.stopPropagation(); // 相当于什么都没阻止，因为这一层要全部执行完
+    })
+
+    root.addEventListener("click", () => {
+      console.log("root bubble2")
+    })
+
+    btn.addEventListener("click", () => {
+      console.log("btn bubble")
+    })
+
+  </script>
+</body>
+
+</html>
