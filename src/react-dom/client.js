@@ -1,6 +1,6 @@
 import { REACT_TEXT } from "../constants";
-import { isDefined, isUndefined, wrapToArray, wrapToVdom } from "../utils";
-
+import { isUndefined, wrapToArray } from "../utils";
+import { setupEventDelegation } from "./event";
 /**
  * 创建DOM容器
  * @param {*} container
@@ -112,9 +112,6 @@ function createDOMElement(vdom) {
   // 1. 如果传递的vdom是空，则直接返回null
   if (isUndefined(vdom)) return null;
   // ! 这里是因为后面走的都是babel的transform，但是在 vite 里面我不知道怎么关闭。 当是文本类型的时候 vdom 还是文本。没有走我们 React.createElement 把这个vdom包裹
-  if (isDefined(vdom)) {
-    vdom = wrapToVdom(vdom);
-  }
 
   // 取出元素类型和属性对象
   // type 可能的类型 1. 原生DOM标签 2.函数（类和函数）
