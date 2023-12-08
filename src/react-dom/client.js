@@ -11,6 +11,7 @@ function createRoot(container) {
     // 把虚拟DOM变成真实DOM，并且插入容器container
     render(rootVdom) {
       mountVdom(rootVdom, container);
+      setupEventDelegation(container);
     },
   };
 }
@@ -69,6 +70,13 @@ function updateProps(domElement, oldProps = {}, newProps) {
     // 如果是行内样式属性的话，则直接覆盖到真实DOM的style上
     if (key === "style") {
       Object.assign(domElement.style, newProps.style);
+    } else if (key.startsWith("on")) {
+      // 在 domElement 上添加自定义的React事件对象 reactEvents，用来存放 react 事件
+      if (isUndefined(domElement.reactEvents)) {
+        domElement.reactEvents = {};
+      }
+      // { onClick: () => {}, onClickCapture: () => {}}
+      domElement.reactEvents[key] = newProps[key];
     } else {
       // 先暂时不处理事件绑定
       domElement[key] = newProps[key];
