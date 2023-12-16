@@ -4,16 +4,25 @@ class ClassComponent extends React.Component {
     console.log("父节点 冒泡阶段执行");
   };
 
-  childBubble = () => {
+  childBubble = (event) => {
+    event.stopPropagation();
     console.log("子节点 冒泡阶段执行");
   };
 
-  parentCapture = () => {
+  parentCapture = (event) => {
+    // console.log("event", event); // SyntheticBaseEvent
+    // 阻止事件传播
+    // event.stopPropagation();
     console.log("父节点 捕获阶段执行");
   };
 
   childCapture = () => {
     console.log("子节点 捕获阶段执行");
+  };
+
+  clickLink = (event) => {
+    // 阻止a标签的默认跳转行为
+    event.preventDefault();
   };
   render() {
     return (
@@ -29,6 +38,9 @@ class ClassComponent extends React.Component {
         >
           click
         </button>
+        <a onClick={this.clickLink} href="http://www.baidu.com">
+          link
+        </a>
       </div>
     );
   }
